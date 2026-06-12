@@ -1,0 +1,41 @@
+# Target build directories
+**/target/
+**/build/
+**/dist/
+
+# Node dependencies
+**/node_modules/
+
+# Local databases & persistent file stores
+**/data/
+*.mv.db
+*.trace.db
+
+# IDE & Editor metadata
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+.classpath
+.project
+.settings/
+.factorypath
+
+# Flutter/Dart specific files
+.dart_tool/
+.packages
+.flutter-plugins
+.flutter-plugins-dependencies
+.metadata
+.packages
+pubspec.lock
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
