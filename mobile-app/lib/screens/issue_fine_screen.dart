@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 class IssueFineScreen extends StatefulWidget {
   final String token;
   final String officerId;
@@ -40,7 +42,8 @@ class _IssueFineScreenState extends State<IssueFineScreen> {
   };
 
   // API Gateway URL. For Android Emulator, use 10.0.2.2 instead of localhost
-  final String _fineApiUrl = 'http://10.0.2.2:8090/api/v1/fines';
+  static const String _host = kIsWeb ? 'localhost' : '10.0.2.2';
+  final String _fineApiUrl = 'http://$_host:8090/api/v1/fines';
 
   Future<void> _submitFine() async {
     if (!_formKey.currentState!.validate()) return;
@@ -135,7 +138,7 @@ class _IssueFineScreenState extends State<IssueFineScreen> {
 
   void _showErrorSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), backgroundColor: Colors.rose),
+      SnackBar(content: Text(message), backgroundColor: Colors.red),
     );
   }
 

@@ -1,15 +1,18 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class PaymentScreen extends StatefulWidget {
   final String token;
   final bool isMock;
+  final Map<String, dynamic>? initialFineDetails;
 
   const PaymentScreen({
     super.key,
     required this.token,
     required this.isMock,
+    this.initialFineDetails,
   });
 
   @override
@@ -17,6 +20,14 @@ class PaymentScreen extends StatefulWidget {
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialFineDetails != null) {
+      _fineDetails = widget.initialFineDetails;
+      _paymentStep = 2;
+    }
+  }
   final _searchController = TextEditingController();
   final _cardNumberController = TextEditingController();
   final _expiryController = TextEditingController();
@@ -31,7 +42,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
   Map<String, dynamic>? _receiptDetails;
 
   // Endpoint configuration
-  final String _apiBase = 'http://10.0.2.2:8090/api/v1';
+  static const String _host = kIsWeb ? 'localhost' : '10.0.2.2';
+  final String _apiBase = 'http://$_host:8090/api/v1';
 
   Future<void> _searchFine() async {
     final ref = _searchController.text.trim().toUpperCase();
@@ -177,7 +189,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
               const Text(
                 'Verify driving fine slip index ref to initialize instant debit/credit payment routing.',
                 style: TextStyle(color: Colors.grey, fontSize: 12),
-                textAlign: Center,
+                textAlign: TextAlign.center,
               ),
               const SizedBox(height: 30),
               TextField(
@@ -217,7 +229,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.between,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
                           'Ref: ${_fineDetails!['referenceNumber']}',
@@ -270,7 +282,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
               ),
               if (_errorText.isNotEmpty) ...[
                 const SizedBox(height: 12),
-                Text(_errorText, style: const TextStyle(color: Colors.rose, fontSize: 12)),
+                Text(_errorText, style: const TextStyle(color: Colors.red, fontSize: 12)),
               ],
               const SizedBox(height: 24),
               SizedBox(
@@ -289,7 +301,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
               )
             ],
             if (_paymentStep == 3 && _receiptDetails != null) ...[
-              const Icon(Icons.check_circle, size: 70, color: Colors.emerald),
+              const Icon(Icons.check_circle, size: 70, color: Colors.green),
               const SizedBox(height: 16),
               const Text('Payment Completed', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
               const SizedBox(height: 24),
@@ -302,21 +314,21 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 child: Column(
                   children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.between,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text('Receipt ID:'),
                         Text(_receiptDetails!['paymentId'], style: const TextStyle(fontWeight: FontWeight.bold)),
                       ],
                     ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.between,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text('Transaction:'),
                         Text(_receiptDetails!['transactionId'], style: const TextStyle(fontWeight: FontWeight.bold)),
                       ],
                     ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.between,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text('Reference:'),
                         Text(_receiptDetails!['fineReference'], style: const TextStyle(fontWeight: FontWeight.bold)),
@@ -324,17 +336,17 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     ),
                     const Divider(color: Colors.white10),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.between,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text('Total Settled:'),
-                        Text('Rs. ${_receiptDetails!['amount']}', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.emerald)),
+                        Text('Rs. ${_receiptDetails!['amount']}', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.green)),
                       ],
                     ),
                   ],
                 ),
               ),
               const SizedBox(height: 30),
-              const Text('SMS alerts sent successfully. Drivers driving license is now released.', style: TextStyle(color: Colors.grey, fontSize: 12), textAlign: Center),
+              const Text('SMS alerts sent successfully. Drivers driving license is now released.', style: TextStyle(color: Colors.grey, fontSize: 12), textAlign: TextAlign.center),
               const SizedBox(height: 20),
               TextButton(
                 onPressed: () {

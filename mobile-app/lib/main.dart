@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/login_screen.dart';
+import 'screens/landing_screen.dart';
 
 void main() {
   runApp(const TrafficFineApp());
@@ -24,7 +24,7 @@ class TrafficFineApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const LoginScreen(),
+      home: const LandingScreen(),
     );
   }
 }

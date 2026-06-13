@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'officer_dashboard.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -17,7 +18,8 @@ class _LoginScreenState extends State<LoginScreen> {
   String _errorMessage = '';
 
   // API Gateway URL. For Android Emulator, use 10.0.2.2 instead of localhost
-  final String _loginUrl = 'http://10.0.2.2:8090/api/v1/auth/login';
+  static const String _host = kIsWeb ? 'localhost' : '10.0.2.2';
+  final String _loginUrl = 'http://$_host:8090/api/v1/auth/login';
 
   Future<void> _handleLogin() async {
     final username = _usernameController.text.trim();
@@ -103,6 +105,14 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),
@@ -162,18 +172,18 @@ class _LoginScreenState extends State<LoginScreen> {
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: Colors.rose.withOpacity(0.1),
-                    border: Border.all(color: Colors.rose.withOpacity(0.3)),
+                    color: Colors.red.withOpacity(0.1),
+                    border: Border.all(color: Colors.red.withOpacity(0.3)),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.error_outline, color: Colors.rose, size: 20),
+                      const Icon(Icons.error_outline, color: Colors.red, size: 20),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           _errorMessage,
-                          style: const TextStyle(color: Colors.rose, fontSize: 12),
+                          style: const TextStyle(color: Colors.red, fontSize: 12),
                         ),
                       ),
                     ],
